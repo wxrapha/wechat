@@ -53,12 +53,13 @@ def index(request):
 	        reply = create_reply('谢谢关注', msg)
 		openid = msg.source
 		print openid
-		subscriber = Members.objects.get(openid=openid)
+		
 		print subscriber
-		if subscriber:
+		try:
+		    subscriber = Members.objects.get(openid=openid)
 		    subscriber.subscribe = True
 		    subscriber.save()
-		else:
+		except:
 		    new_subscribr = Members()
 		    new_subscribr.openid = openid
 		    new_subscribr.save()
@@ -178,9 +179,10 @@ def get_code(request):
  	#	print subscribe  		
 		
 		
-                members = Members.objects.get(openid=openid)
+                
 		print members
-                if members:
+                try:
+		    members = Members.objects.get(openid=openid)
                     members.name = nickname
 		    print members.name
                     members.sex = sex
@@ -190,7 +192,7 @@ def get_code(request):
               	    members.openid = openid
 		    members.headimgurl = headimgurl
                     members.save()
-		if not members:
+		except:
 		    new_members = Members()
 		    new_members.name = nickname
 		    print new_members.name
@@ -271,18 +273,20 @@ def info(request):
 	    industry = request.POST.get('industry', '')
 	    company = request.POST.get('company', '')
 	    position = request.POST.get('position', '')
-	    wechat_info = Members.objects.get(openid=openid)
-	    print wechat_info
-	    wechat_info.realname = realname
-	    wechat_info.mobile = mobile
-	    wechat_info.address = address
-	    wechat_info.industry = industry
-	    wechat_info.company = company
-	    wechat_info.position = position
-	    wechat_info.birthday = birthday
-	    wechat_info.save()
-	    return render(request, 'success.html')
-
+	    try:
+	        wechat_info = Members.objects.get(openid=openid)
+	        print wechat_info
+	        wechat_info.realname = realname
+	        wechat_info.mobile = mobile
+	        wechat_info.address = address
+	        wechat_info.industry = industry
+	        wechat_info.company = company
+	        wechat_info.position = position
+	        wechat_info.birthday = birthday
+	        wechat_info.save()
+	        return render(request, 'success.html')
+	    ecxept:
+		return HttpResponse("请用微信")
 
 class AllFansView(View):
     def get(self, request):
