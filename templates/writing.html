@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}文字 - Raphah{% endblock%}
+{% block stitle %}我的记录{% endblock %}
+{% block custom_css %}
+<link rel="stylesheet" href="/static/css/pagination.css">
+<style>
+.container{
+    padding: 0;
+    margin: 0;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+.blog-border{ border: 1px #ccc solid; border-radius: 6px;}
+
+
+.blog-item{ clear:both; border-bottom: 1px solid #ddd; padding: 1.5em 1em 0.8em 1.5em; overflow: hidden; }
+.blog-title{ margin-bottom: 0.5em; font-size: 115%; font-weight: bold;}
+.blog_descipt{ color: #777; font-size: small;}
+.blog-tags{ font-size: 70%; color: #75878a; margin-top: 0.5em; display: inline-block; border-top: 1px #ddd solid;}
+.blog-tags li{  float: left;  padding-top: 0.5em; margin-right: 1em;}
+
+.tag-recommend a{ color:#c93756;}
+</style>
+{% endblock %}
+{% block content %}
+    <hr>
+ <div class="blog-border">
+{% for word in words.object_list %}
+<div class="blog-item">
+    <div class="blog-title">
+        <a href="{% url 'desc' word.id %}" target="_blank">{{ word.title }}</a>
+    </div>
+
+    <div class="blog_descipt">
+        {% autoescape off %}{{ word.synopsis }}{% endautoescape %}
+    </div>
+
+    <div class="blog-tags">
+        <ul>
+            <li>
+                <span class="glyphicon glyphicon-time"></span>
+                <span>{{ word.add_time }}</span>
+            </li>
+
+            <li>
+
+                阅读：{{ word.click_nums }}
+            </li>
+            <li>
+
+                评论：{{ word.commit_nums }}
+            </li>
+
+            <li>
+                <span class="glyphicon glyphicon-tag"></span>
+                <a href="{{ word.author_url }}">作者：{{ word.author }}</a>
+            </li>
+
+        </ul>
+    </div>
+
+</div>
+{% endfor %}
+ </div>
+ <div class="pageturn">
+    <ul class="pagelist">
+        {% if words.has_previous %}
+            <li class="long"><a href="?{{ words.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in words.pages %}
+                    {% if page %}
+                        {% ifequal page words.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none"><a href="">...</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if words.has_next %}
+             <li class="long"><a href="?{{ words.next_page_number.querystring }}">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}

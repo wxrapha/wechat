@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}生活 - Raphah{% endblock %}
+{% block stitle %}我的生活{% endblock %}
+{% block custom_css %}
+<link rel="stylesheet" href="/static/css/pagination.css">
+<style>
+hr {
+    margin-bottom: 15px;
+    margin-right: 100px;
+}
+.media {
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px #ccc solid; border-radius: 6px;
+}
+.media:first-child {
+    margin-top: 0;
+}
+.media,
+.media-body {
+    overflow: hidden;
+    zoom: 1;
+}
+.media-body {
+    width: 10000px;
+}
+.media-object {
+    display: block;
+    height: 50px;
+    width: 50px;
+}
+
+.media-left,
+.media-body {
+    display: table-cell;
+    vertical-align: top;
+}
+.media-heading {
+    margin-top: 0;
+    margin-bottom: 2px;
+    font-size: 12px;
+    text-align: right;
+    color: grey;
+}
+</style>
+{% endblock %}
+{% block content %}
+<hr>
+{% for commit in commits.object_list %}
+<div class="media">
+  <div class="media-left">
+      <a href="#">
+      <img class="media-object" src="/static/image/gl.jpg" alt="...">
+      </a>
+  </div>
+  <div class="media-body">
+    <h1 class="media-content">{% autoescape off %}{{ commit.content }}{% endautoescape %}</h1>
+    <h1 class="media-heading">{{ commit.add_time }}</h1>
+  </div>
+</div>
+{% endfor %}
+<div class="pageturn">
+    <ul class="pagelist">
+        {% if commits.has_previous %}
+            <li class="long"><a href="?{{ commits.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in commits.pages %}
+                    {% if page %}
+                        {% ifequal page commits.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none"><a href="">...</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if commits.has_next %}
+             <li class="long"><a href="?{{ commits.next_page_number.querystring }}">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}

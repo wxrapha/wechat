@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block custom_css %}
+<link rel="stylesheet" href="/static/css/formmessage.css">
+<link rel="stylesheet" href="/static/css/pagination.css">
+<style>
+.smart-green{
+    max-width: 800px;
+}
+.blog-border{ border: 1px #ccc solid; border-radius: 6px;}
+#desc{
+    margin-bottom: 50px;
+}
+
+.blog-item{ clear:both; border-bottom: 1px solid #ddd;
+    padding: 1.5em 1em 0.8em 1.5em; overflow: hidden; }
+.blog-title{ margin-bottom: 0.5em; font-size: 115%; font-weight: bold; font-size: x-large}
+.blog_descipt{ color: #777; font-size: small;}
+.blog-tags{ font-size: 15px; color: #75878a; margin-top: 0.5em; display: inline-block; border-top: 1px #ddd solid;}
+.blog-tags li{  float: left;  padding-top: 0.5em; margin-right: 1em;}
+
+
+.media-heading {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 10px;
+    text-align: right;
+    color: grey;
+}
+.panel-default{border-color:#ddd}.panel-default>.panel-heading{color:#333;background-color:#f5f5f5;border-color:#ddd}.panel-default>.panel-heading+.panel-collapse>.panel-body{border-top-color:#ddd}.panel-default>.panel-heading .badge{color:#f5f5f5;background-color:#333}.panel-default>.panel-footer+.panel-collapse>.panel-body{border-bottom-color:#ddd}
+.panel-heading{padding:10px 15px;border-bottom:1px solid transparent;border-top-left-radius:3px;border-top-right-radius:3px}
+
+</style>
+{% endblock %}
+{% block content %}
+<hr>
+<div class="blog-border" id="desc">
+    <div class="blog-item">
+        <div class="blog-title">
+            <a href="">{{ contents.title }}</a>
+        </div>
+
+        <div class="blog-tags">
+            <ul>
+                <li>
+                    <span class="glyphicon glyphicon-time"></span>
+                    <span>{{ contents.add_time }}</span>
+                </li>
+
+                <li>
+                    阅读：({{ contents.click_nums }})
+                </li>
+                <li>
+
+                    评论：({{ contents.commit_nums }})
+                </li>
+
+
+                <li>
+                    <span class="glyphicon glyphicon-tag"></span>
+                    <a href="{{ contents.author_url }}">作者：{{ contents.author }}</a>
+                </li>
+
+            </ul>
+        </div>
+    <hr>
+        <div class="blog_descipt">
+            {% autoescape off %}{{ contents.body }}{% endautoescape %}
+        </div>
+    </div>
+</div>
+<div class="panel-default">
+<div class="panel-heading">
+<h4 id="comment_title">新的评论</h4>
+</div>
+{% for commit in all_commits.object_list %}
+<div class="panel-body">
+  <div class="blog-item">
+    <h1 class="media-content">留言： {{ commit.comments }}</h1>
+    <h1 class="media-heading">{{ commit.add_time }}</h1>
+
+  </div>
+</div>
+{% endfor %}
+<div class="pageturn">
+    <ul class="pagelist">
+        {% if all_commits.has_previous %}
+            <li class="long"><a href="?{{ all_commits.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in all_commits.pages %}
+                    {% if page %}
+                        {% ifequal page all_commits.number %}
+                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none"><a href="">...</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if all_commits.has_next %}
+             <li class="long"><a href="?{{ all_commits.next_page_number.querystring }}">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+</div>
+
+<div>
+    <form action="{% url 'add_desc_commit' contents.id %}" method="post" class="smart-green">
+    <label>
+        <span>留言 :</span>
+        <textarea id="message" name="message"  placeholder="智慧如你，不想发表一下意见吗？">{{ all_commits.commit }}</textarea>
+        <div class="error-msg"></div>
+    </label>
+    <div class="success-msg"></div>
+    <label>
+        <input type="submit" class="button" value="提交"/>
+    </label>
+    {% csrf_token %}
+    </form>
+</div>
+{% endblock %}

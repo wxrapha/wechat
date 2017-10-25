@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+    <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>{% block title %}{% endblock title %}</title>
+        {% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'css/weui.min.css' %}">
+        <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        {% block main %}
+        {% endblock main %}
+    </body>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+</html>

@@ -1,0 +1,22 @@
+{% extends 'wechat_base.html' %}
+
+{% block title %}
+    个人信息展示
+{% endblock title %}
+{% block main %}
+{% for fan in fans %}
+<div class="media" style="margin-top:5px;padding:5px;">
+  <div class="media-left">
+    <a href="{% url "fansdetail" fan.id %}">
+      <img class="media-object" src="{{ fan.headimgurl }}" style="width: 40px;height: 40px;border-radius:10px;" alt="...">
+    </a>
+  </div>
+  <div class="media-body">
+      <h5 class="media-heading">{{ fan.name }}</h5>
+      <h8 class="media-heading">未分组</h8>
+      <div style="float: right">关注于：{{ fans.subscribe_time }}</div>
+  </div>
+</div>
+<hr style="margin:5px;">
+{% endfor %}
+{% endblock main %}
